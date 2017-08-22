@@ -33,10 +33,10 @@ class Player(pg.sprite.Sprite):
 
 
 
-    def move(self, dx=0, dy=0):
-        if not self.collide_with_walls(dx,dy): #as long as there is not a coloured square or object i.e. a wall in that area then it can move
-            self.x += dx
-            self.y += dy
+   # def move(self, dx=0, dy=0):
+    #    if not self.collide_with_walls(dx,dy): #as long as there is not a coloured square or object i.e. a wall in that area then it can move
+     #       self.x += dx
+      #      self.y += dy
 
 
     def collide_with_walls(self, dir):

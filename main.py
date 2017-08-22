@@ -2,35 +2,34 @@ import pygame as pg
 import sys
 from settings import *
 from sprites import *
+from tilemap import *
 from os import path
+
 class Game:
     def __init__(self):
         pg.init()
         self.screen = pg.display.set_mode((WIDTH, HEIGHT))
         pg.display.set_caption(TITLE)
         self.clock = pg.time.Clock()
-        pg.key.set_repeat(500, 100)
         self.load_data()
 
     def load_data(self):    #this allows me to import from a text file to edit a map without manually inputing co-ordinates but by instead drawing it out in a txt file
         game_folder = path.dirname(__file__)
-        self.map_data = []
-        with open(path.join(game_folder,'mapfile.txt'),'rt') as f:
-            for line in f:
-                self.map_data.append(line)
+        self.map = Map(path.join(game_folder, 'mapfile2.txt'))
+
 
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        for row, tiles in enumerate(self.map_data):                          #enumerate fives index and the item (gives me the value, row and the column)
-            for col, tile in enumerate(tiles):
-                if tile =='1':
+        for row, tiles in enumerate(self.map.data):
+            for col, tile in enumerate(tiles): #enumerate gives index and the item (gives me the value, row and the column) p on the text file is the starting position of the character, to prevent player spawning in a wall
+
+                if tile == '1':
                     Wall(self, col, row)
-                if tile == 'p':
-                    self.player = Player(self, col, row)                    # p on the text file is the starting position of the character, to prevent player spawning in a wall
-
-
+                if tile == 'P':
+                    self.player = Player(self, col, row)
+        self.camera = Camera(self.map.width, self.map.height)
 
     def run(self):
         # game loop - set self.playing = False to end the game
@@ -48,6 +47,7 @@ class Game:
     def update(self):
         # update portion of the game loop
         self.all_sprites.update()
+        self.camera.update(self.player)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -58,7 +58,8 @@ class Game:
     def draw(self):
         self.screen.fill(BGCOLOR)
         self.draw_grid()
-        self.all_sprites.draw(self.screen)
+        for sprite in self.all_sprites:
+            self.screen.blit(sprite.image, self.camera.apply(sprite))    #moves the map
         pg.display.flip()
 
     def events(self):
