@@ -2,7 +2,7 @@ import pygame as pg
 import sys
 from settings import *
 from sprites import *
-
+from os import path
 class Game:
     def __init__(self):
         pg.init()
@@ -12,16 +12,25 @@ class Game:
         pg.key.set_repeat(500, 100)
         self.load_data()
 
-    def load_data(self):
-        pass
+    def load_data(self):    #this allows me to import from a text file to edit a map without manually inputing co-ordinates but by instead drawing it out in a txt file
+        game_folder = path.dirname(__file__)
+        self.map_data = []
+        with open(path.join(game_folder,'mapfile.txt'),'rt') as f:
+            for line in f:
+                self.map_data.append(line)
 
     def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        self.player = Player(self, 10, 10)
-        for x in range(10, 20):
-            Wall(self, x, 5)
+        for row, tiles in enumerate(self.map_data):                          #enumerate fives index and the item (gives me the value, row and the column)
+            for col, tile in enumerate(tiles):
+                if tile =='1':
+                    Wall(self, col, row)
+                if tile == 'p':
+                    self.player = Player(self, col, row)                    # p on the text file is the starting position of the character, to prevent player spawning in a wall
+
+
 
     def run(self):
         # game loop - set self.playing = False to end the game
