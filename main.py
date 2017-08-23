@@ -1,9 +1,9 @@
 import pygame as pg
 import sys
+from os import path
 from settings import *
 from sprites import *
 from tilemap import *
-from os import path
 
 class Game:
     def __init__(self):
@@ -13,20 +13,18 @@ class Game:
         self.clock = pg.time.Clock()
         self.load_data()
 
-    def load_data(self):    #this allows me to import from a text file to edit a map without manually inputing co-ordinates but by instead drawing it out in a txt file
+    def load_data(self):        #this allows me to import from a text file to edit a map without manually inputing co-ordinates but by instead drawing it out in a txt file
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'img')
         self.map = Map(path.join(game_folder, 'mapfile2.txt'))
         self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
 
-
-    def new(self):
+    def new(self):                  #enumerate gives index and the item (gives me the value, row and the column) p on the text file is the starting position of the character, to prevent player spawning in a wall
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
         for row, tiles in enumerate(self.map.data):
-            for col, tile in enumerate(tiles): #enumerate gives index and the item (gives me the value, row and the column) p on the text file is the starting position of the character, to prevent player spawning in a wall
-
+            for col, tile in enumerate(tiles):
                 if tile == '1':
                     Wall(self, col, row)
                 if tile == 'P':
@@ -37,7 +35,7 @@ class Game:
         # game loop - set self.playing = False to end the game
         self.playing = True
         while self.playing:
-            self.dt = self.clock.tick(FPS) /1000   #move at a speed, independant of the frame rate, /1000 as the time is given milliseconds
+            self.dt = self.clock.tick(FPS) / 1000.0          #move at a speed, independant of the frame rate, /1000 as the time is given milliseconds
             self.events()
             self.update()
             self.draw()
@@ -61,7 +59,8 @@ class Game:
         self.screen.fill(BGCOLOR)
         self.draw_grid()
         for sprite in self.all_sprites:
-            self.screen.blit(sprite.image, self.camera.apply(sprite))    #moves the map
+            self.screen.blit(sprite.image, self.camera.apply(sprite))
+        # pg.draw.rect(self.screen, WHITE, self.player.hit_rect, 2)
         pg.display.flip()
 
     def events(self):
@@ -72,7 +71,6 @@ class Game:
             if event.type == pg.KEYDOWN:
                 if event.key == pg.K_ESCAPE:
                     self.quit()
-
 
     def show_start_screen(self):
         pass
