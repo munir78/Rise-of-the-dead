@@ -1,6 +1,6 @@
 import pygame as pg
 from settings import *
-vec = pg.math.Vector2   #import pygae vector class
+vec = pg.math.Vector2   #import pygame vector class
 
 
 class Player(pg.sprite.Sprite):
@@ -12,21 +12,22 @@ class Player(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.vel = vec(0, 0)
         self.pos = vec(x,y) * TILESIZE
+        self.rot = 0
 
 
     def get_keys(self):
+        self.rot_speed = 0
         self.vel = vec(0, 0)
         keys = pg.key.get_pressed()
         if keys[pg.K_LEFT] or keys[pg.K_a]:
-            self.vel.x = -PLAYER_SPEED
+            self.rot_speed = PLAYER_ROT_SPEED                            #velocity rotated to point in the direction we are facing
         if keys[pg.K_RIGHT] or keys[pg.K_d]:
-            self.vel.x = PLAYER_SPEED
-        if keys[pg.K_UP] or keys[pg.K_w]:                        #player keys for movement, in order to prevent diagonal movement from becomig faster than straight movement i must multiply by the square root of 0.5
-            self.vel.y = -PLAYER_SPEED
+            self.rot_speed = -PLAYER_ROT_SPEED
+        if keys[pg.K_UP] or keys[pg.K_w]:
+            self.vel = vec(PLAYER_SPEED, 0).rotate(-self.rot)
         if keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.vel.y = PLAYER_SPEED
-        if self.vel.x != 0 and self.vel.y != 0:
-            self.vel *= 0.7071
+            self.vel = vec(-PLAYER_SPEED/2, 0).rotate(-self.rot)
+
 
 
 
@@ -54,8 +55,9 @@ class Player(pg.sprite.Sprite):
 
     def update(self):
         self.get_keys()
+        self.rot = (self.rot + self.rot_speed * self.game.dt) % 360
+        self.image = pg.transform.rotate(self.game.player_img,self.rot )#rotation around 360 degrees, image rotates by angle
         self.pos +=self.vel * self.game.dt           #rectangle can now move in betwwen the squares for smooth movement, less judder
-
         self.rect.x = self.pos.x
         self.collide_with_walls('x')
         self.rect.y = self.pos.y
