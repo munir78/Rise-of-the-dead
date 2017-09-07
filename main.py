@@ -53,9 +53,13 @@ class Game:
         sys.exit()
 
     def update(self):
-        # update portion of the game loop
+        # update section of the game loop
         self.all_sprites.update()
         self.camera.update(self.player)
+        # bullets hit ZEDS
+        hits = pg.sprite.groupcollide(self.zeds, self.bullets, False, True)
+        for hit in hits:
+            hit.kill()
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
