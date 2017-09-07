@@ -109,3 +109,19 @@ class Zed(pg.sprite.Sprite):
         collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
 
+class Bullet(pg.sprite.Sprite):
+    def __init__(self, game, pos, dir):      #position and direction are the vectors
+        self.groups = game.all_sprites, game.bullets
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.image = BULLET_IMG
+        self.rect = self.image.get_rect()
+        self.pos = pos
+        self.rect.center = pos
+        self.vel = dir * BULLET_SPEED
+        self.spawn_time = pg.time.get_ticks()
+
+    def update(self):
+        self.pos += self.game.dt *self.vel
+        self.rect.center = self.pos
+        if pg.time.get_ticks() - self.spawn_time > BULLET_LIFETIME:
+            self.kill()

@@ -28,8 +28,10 @@ PLAYER_ROT_SPEED = 250.0
 PLAYER_IMG = 'smgh.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35) #size of rectangle for player
 
-
-
+#Gun Settings
+BULLET_IMG = 'Bullet2.png'
+BULLET_SPEED = 500
+BULLET_LIFETIME = 1000
 # ZED SETTINGS
 ZED_IMG = 'ZED.png'
 ZED_SPEED = 250                #must add friction
