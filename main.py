@@ -59,7 +59,8 @@ class Game:
         # bullets hit ZEDS
         hits = pg.sprite.groupcollide(self.zeds, self.bullets, False, True)
         for hit in hits:
-            hit.kill()
+            hit.health -= BULLET_DAMAGE
+            hit.vel = vec(0,0)  # bullet stops ZED moving
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -72,6 +73,8 @@ class Game:
         self.screen.fill(BGCOLOR)
        # self.draw_grid()
         for sprite in self.all_sprites:
+            if isinstance(sprite,Zed):
+                sprite.draw_health()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()
 

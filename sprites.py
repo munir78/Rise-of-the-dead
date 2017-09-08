@@ -51,7 +51,7 @@ class Player(pg.sprite.Sprite):
         if keys[pg.K_UP] or keys[pg.K_w]:
             self.vel = vec(PLAYER_SPEED, 0).rotate(-self.rot)
         if keys[pg.K_DOWN] or keys[pg.K_s]:
-            self.vel = vec(-PLAYER_SPEED / 2, 0).rotate(-self.rot)
+            self.vel = vec(-PLAYER_SPEED, 0).rotate(-self.rot)
         if keys[pg.K_SPACE]:
             now = pg.time.get_ticks()
             if now - self.last_shot > BULLET_RATE:
@@ -101,6 +101,7 @@ class Zed(pg.sprite.Sprite):
         self.acc = vec(0, 0)
         self.rect.center = self.pos
         self.rot = 0
+        self.health = 100
 
     def update(self):     #to find the angle which the ZED must have to face the player, use direction vector. player.pos -zed.pos to get the vector connecting the two locations, then find the angle of that vector (to the x axis)
         self.rot = (self.game.player.pos - self.pos).angle_to(vec(1, 0))
@@ -116,6 +117,21 @@ class Zed(pg.sprite.Sprite):
         self.hit_rect.centery = self.pos.y
         collide_with_walls(self, self.game.walls, 'y')
         self.rect.center = self.hit_rect.center
+        if self.health <=0 :
+            self.kill()
+
+    def draw_health(self):
+        if self.health >60:
+            col = GREEN
+        elif self.health > 40:
+            col = YELLOW
+        else:
+            col = RED
+        width = int(self.rect.width* self.health/100)
+        self.health_bar = pg.Rect(0,0,width,7)
+        if self.health <100:
+            pg.draw.rect(self.image,col,self.health_bar)
+
 
 class Bullet(pg.sprite.Sprite):
     def __init__(self, game, pos, dir):
