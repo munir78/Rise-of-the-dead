@@ -29,7 +29,8 @@ PLAYER_SPEED = 300.0
 PLAYER_ROT_SPEED = 250.0
 PLAYER_IMG = 'smgh.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35) #size of rectangle for player
-BARREL_OFFSET = vec(30, 10)
+BARREL_OFFSET = vec(30, 10)  #where bullets spawn from
+PLAYER_HEALTH = 100
 #Gun Settings
 BULLET_IMG = 'Bullet2.png'
 BULLET_SPEED = 500
@@ -39,6 +40,9 @@ KICKBACK = 200
 GUN_SPREAD = 5
 BULLET_DAMAGE = 25
 # ZED SETTINGS
-ZED_IMG = 'k.png'
+ZED_IMG = 'Zed.png'
 ZED_SPEED = 250                #must add friction
 ZED_HIT_RECT = pg.Rect(0,0,30,30)
+ZED_HEALTH = 100
+ZED_DAMAGE =  10
+ZED_KNOCKBACK = 20

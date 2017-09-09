@@ -56,8 +56,18 @@ class Game:
         # update section of the game loop
         self.all_sprites.update()
         self.camera.update(self.player)
+        #zeds hit the player
+        hits = pg.sprite.spritecollide(self.player, self.zeds, False, collide_hit_rect) #damage taken when zeds collide with player
+        for hit in hits:
+            self.player.health -= ZED_DAMAGE
+            hit.vel = vec(0,0)
+            if self.player.health <= 0:
+                self.playing = False
+        if hits:
+            self.player.pos += vec(ZED_KNOCKBACK,0).rotate(-hits[0].rot)
+
         # bullets hit ZEDS
-        hits = pg.sprite.groupcollide(self.zeds, self.bullets, False, True)
+        hits = pg.sprite.groupcollide(self.zeds, self.bullets, False, True) # damage taken by zeds when bullet sprite collides with zed
         for hit in hits:
             hit.health -= BULLET_DAMAGE
             hit.vel = vec(0,0)  # bullet stops ZED moving
@@ -73,7 +83,7 @@ class Game:
         self.screen.fill(BGCOLOR)
        # self.draw_grid()
         for sprite in self.all_sprites:
-            if isinstance(sprite,Zed):
+            if isinstance(sprite,Zed):                  #only in the case of a zed is the bar drawn
                 sprite.draw_health()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
         pg.display.flip()

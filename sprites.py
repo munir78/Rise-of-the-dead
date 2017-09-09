@@ -39,6 +39,7 @@ class Player(pg.sprite.Sprite):
         self.pos = vec(x, y) * TILESIZE
         self.rot = 0
         self.last_shot = 0
+        self.health = PLAYER_HEALTH
 
     def get_keys(self):
         self.rot_speed = 0
@@ -101,7 +102,7 @@ class Zed(pg.sprite.Sprite):
         self.acc = vec(0, 0)
         self.rect.center = self.pos
         self.rot = 0
-        self.health = 100
+        self.health = ZED_HEALTH
 
     def update(self):     #to find the angle which the ZED must have to face the player, use direction vector. player.pos -zed.pos to get the vector connecting the two locations, then find the angle of that vector (to the x axis)
         self.rot = (self.game.player.pos - self.pos).angle_to(vec(1, 0))
@@ -121,15 +122,15 @@ class Zed(pg.sprite.Sprite):
             self.kill()
 
     def draw_health(self):
-        if self.health >60:
+        if self.health >60:                         #draws the rectangle of health whenever less than one hundred
             col = GREEN
         elif self.health > 40:
             col = YELLOW
         else:
             col = RED
-        width = int(self.rect.width* self.health/100)
+        width = int(self.rect.width* self.health/ZED_HEALTH)            # width of the rectangle multiplied by the zeds health PERCENTAGE to show a decrease in size and health
         self.health_bar = pg.Rect(0,0,width,7)
-        if self.health <100:
+        if self.health <ZED_HEALTH:
             pg.draw.rect(self.image,col,self.health_bar)
 
 
@@ -142,7 +143,7 @@ class Bullet(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.pos = vec(pos)
         self.rect.center = pos
-        spread = uniform(-GUN_SPREAD, GUN_SPREAD)
+        spread = uniform(-GUN_SPREAD, GUN_SPREAD)                       #spread determined by uniform random uniform integers
         self.vel = dir.rotate(spread) * BULLET_SPEED
         self.spawn_time = pg.time.get_ticks()
 
