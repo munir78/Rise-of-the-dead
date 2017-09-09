@@ -10,18 +10,18 @@ def collide_with_walls(sprite,group, dir): #applies to all sprites
     if dir == 'x':
         hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
         if hits:
-            if sprite.vel.x > 0:
+            if hits[0].rect.centerx > sprite.hit_rect.centerx:                    #checks to see if the players center is greater than the center of the wall, go against the left
                 sprite.pos.x = hits[0].rect.left - sprite.hit_rect.width / 2.0
-            if sprite.vel.x < 0:
+            if hits[0].rect.centerx < sprite.hit_rect.centerx:              #checks to see if the players center is greater than the center of the wall, go against the right
                 sprite.pos.x = hits[0].rect.right + sprite.hit_rect.width / 2.0
             sprite.vel.x = 0
             sprite.hit_rect.centerx = sprite.pos.x
     if dir == 'y':
-        hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)
+        hits = pg.sprite.spritecollide(sprite, group, False, collide_hit_rect)   #check if underneath or over
         if hits:
-            if sprite.vel.y > 0:
+            if hits[0].rect.centery > sprite.hit_rect.centery:
                 sprite.pos.y = hits[0].rect.top - sprite.hit_rect.height / 2.0
-            if sprite.vel.y < 0:
+            if hits[0].rect.centery < sprite.hit_rect.centery:
                 sprite.pos.y = hits[0].rect.bottom + sprite.hit_rect.height / 2.0
             sprite.vel.y = 0
             sprite.hit_rect.centery = sprite.pos.y
