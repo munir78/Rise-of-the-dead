@@ -34,6 +34,7 @@ class Game:
     def load_data(self):        #this allows me to import from a text file to edit a map without manually inputing co-ordinates but by instead drawing it out in a txt file
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'img')
+        img_folder = path.join(game_folder, 'img')
         self.map = Map(path.join(game_folder, 'mapfile2.txt'))
         self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
         self.bullet_img = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()

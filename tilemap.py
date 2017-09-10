@@ -1,5 +1,6 @@
 import pygame as pg
 from settings import *
+import pytmx
 
 def collide_hit_rect(one, two):
     return one.hit_rect.colliderect(two.rect)
@@ -16,6 +17,8 @@ class Map:
         self.width = self.tilewidth * TILESIZE
         self.height = self.tileheight * TILESIZE
 
+
+
 class Camera:
     def __init__(self, width, height):
         self.camera = pg.Rect(0, 0, width, height)
@@ -24,6 +27,9 @@ class Camera:
 
     def apply(self, entity):
         return entity.rect.move(self.camera.topleft)                #new rectangle shifted by certain amount when offset is changed
+
+    def apply_rect(self,rect):
+        return rect.move(self.camera.topleft)
 
     def update(self, target):
         x = -target.rect.centerx + int(WIDTH / 2)
