@@ -15,7 +15,7 @@ BROWN = (106,55,5)
 WIDTH = 1024   # 16 * 64 or 32 * 32 or 64 * 16
 HEIGHT = 768  # 16 * 48 or 32 * 24 or 64 * 12
 FPS = 60
-TITLE = "Gates of Hell"
+TITLE = "Manor of Terror"
 BGCOLOR = DRED
 TILESIZE = 64
 GRIDWIDTH = WIDTH / TILESIZE
@@ -41,9 +41,12 @@ GUN_SPREAD = 5
 BULLET_DAMAGE = 25
 # ZED SETTINGS
 ZED_IMG = 'ZED.png'
-ZED_SPEED = 250                #must add friction
+ZED_SPEEDS = [150,100,75,200,300]                #must add friction             #different speeds can be selected by the computer. randomized
 ZED_HIT_RECT = pg.Rect(0,0,30,30)
 ZED_HEALTH = 100
 ZED_DAMAGE =  10
 ZED_KNOCKBACK = 20
 AVOID_RADIUS = 50
+
+
+

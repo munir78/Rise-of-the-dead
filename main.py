@@ -5,7 +5,7 @@ from settings import *
 from sprites import *
 from tilemap import *
 
-# HUD FUNCTIONS
+# HUD functions
 def draw_player_health(surf, x, y, pct):
     if pct < 0:
         pct = 0
@@ -31,38 +31,46 @@ class Game:
         self.clock = pg.time.Clock()
         self.load_data()
 
-    def load_data(self):        #this allows me to import from a text file to edit a map without manually inputing co-ordinates but by instead drawing it out in a txt file
+    def load_data(self):
         game_folder = path.dirname(__file__)
         img_folder = path.join(game_folder, 'img')
-        img_folder = path.join(game_folder, 'img')
-        self.map = Map(path.join(game_folder, 'mapfile2.txt'))
+        map_folder = path.join(game_folder, 'map')
+        self.map = TiledMap(path.join(map_folder, 'Lvl1.tmx'))
+        self.map_img = self.map.make_map()
+        self.map_rect = self.map_img.get_rect()
         self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
         self.bullet_img = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()
-        self.zed_img = pg.image.load(path.join(img_folder, ZED_IMG)).convert_alpha()
+        self.mob_img = pg.image.load(path.join(img_folder, ZED_IMG)).convert_alpha()
         self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
-        self.wall_img  = pg.transform.scale(self.wall_img,(TILESIZE,TILESIZE))
+        self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
 
-    def new(self):                  #enumerate gives index and the item (gives me the value, row and the column) p on the text file is the starting position of the character, to prevent player spawning in a wall
+    def new(self):
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
+        self.mobs = pg.sprite.Group()
         self.bullets = pg.sprite.Group()
-        self.zeds = pg.sprite.Group()
-        for row, tiles in enumerate(self.map.data):
-            for col, tile in enumerate(tiles):
-                if tile == '1':
-                    Wall(self, col, row)
-                if tile == 'Z':
-                    Zed(self, col, row)
-                if tile == 'P':
-                    self.player = Player(self, col, row)
+        # for row, tiles in enumerate(self.map.data):              now using tmx file to create map
+        #     for col, tile in enumerate(tiles):
+        #         if tile == '1':
+        #             Wall(self, col, row)
+        #         if tile == 'Z':
+        #             Zed(self, col, row)
+        #         if tile == 'P':
+        #             self.player = Player(self, col, row)
+        for tile_object in self.map.tmxdata.objects:
+            if tile_object.name == 'player':
+                self.player = Player(self,tile_object.x,tile_object.y)
+            if tile_object.name =='Walls':
+                Obstacle(self,tile_object.x,tile_object.y,tile_object.width,tile_object.height)
+
         self.camera = Camera(self.map.width, self.map.height)
 
     def run(self):
         # game loop - set self.playing = False to end the game
         self.playing = True
         while self.playing:
-            self.dt = self.clock.tick(FPS) / 1000.0          #move at a speed, independant of the frame rate, /1000 as the time is given milliseconds
+            self.dt = self.clock.tick(FPS) / 1000.0  # fix for Python 2.x
             self.events()
             self.update()
             self.draw()
@@ -75,21 +83,20 @@ class Game:
         # update section of the game loop
         self.all_sprites.update()
         self.camera.update(self.player)
-        #zeds hit the player
-        hits = pg.sprite.spritecollide(self.player, self.zeds, False, collide_hit_rect) #damage taken when zeds collide with player
+        # mobs hit player
+        hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect)
         for hit in hits:
             self.player.health -= ZED_DAMAGE
-            hit.vel = vec(0,0)
+            hit.vel = vec(0, 0)
             if self.player.health <= 0:
                 self.playing = False
         if hits:
-            self.player.pos += vec(ZED_KNOCKBACK,0).rotate(-hits[0].rot)
-
-        # bullets hit ZEDS
-        hits = pg.sprite.groupcollide(self.zeds, self.bullets, False, True) # damage taken by zeds when bullet sprite collides with zed
+            self.player.pos += vec(ZED_KNOCKBACK, 0).rotate(-hits[0].rot)
+        # bullets hit zeds
+        hits = pg.sprite.groupcollide(self.mobs, self.bullets, False, True)
         for hit in hits:
             hit.health -= BULLET_DAMAGE
-            hit.vel = vec(0,0)  # bullet stops ZED moving
+            hit.vel = vec(0, 0)
 
     def draw_grid(self):
         for x in range(0, WIDTH, TILESIZE):
@@ -98,15 +105,17 @@ class Game:
             pg.draw.line(self.screen, LIGHTGREY, (0, y), (WIDTH, y))
 
     def draw(self):
-        pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))       #allows me to see fps of game
-        self.screen.fill(BGCOLOR)
-       # self.draw_grid()
+        pg.display.set_caption("{:.2f}".format(self.clock.get_fps()))
+        # self.screen.fill(BGCOLOR)
+        self.screen.blit(self.map_img, self.camera.apply_rect(self.map_rect))
+        # self.draw_grid()
         for sprite in self.all_sprites:
-            if isinstance(sprite,Zed):                  #only in the case of a zed is the bar drawn
+            if isinstance(sprite, Zed):
                 sprite.draw_health()
             self.screen.blit(sprite.image, self.camera.apply(sprite))
-        #Hud functions
-        draw_player_health(self.screen,10,10,self.player.health/PLAYER_HEALTH)
+        # pg.draw.rect(self.screen, WHITE, self.player.hit_rect, 2)
+        # HUD functions
+        draw_player_health(self.screen, 10, 10, self.player.health / PLAYER_HEALTH)
         pg.display.flip()
 
     def events(self):

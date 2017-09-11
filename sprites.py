@@ -2,7 +2,7 @@
 import pygame as pg
 from settings import *
 from tilemap import collide_hit_rect
-from random import uniform
+from random import uniform, choice
 vec = pg.math.Vector2              #as velocity is a vector
 
 
@@ -36,7 +36,7 @@ class Player(pg.sprite.Sprite):
         self.hit_rect = PLAYER_HIT_RECT
         self.hit_rect.center = self.rect.center
         self.vel = vec(0, 0)
-        self.pos = vec(x, y) * TILESIZE
+        self.pos = vec(x, y)
         self.rot = 0
         self.last_shot = 0
         self.health = PLAYER_HEALTH
@@ -76,7 +76,7 @@ class Player(pg.sprite.Sprite):
         self.rect.center = self.hit_rect.center
 
 class Wall(pg.sprite.Sprite):
-    def __init__(self, game, x, y):
+   def __init__(self, game, x, y):
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -86,6 +86,18 @@ class Wall(pg.sprite.Sprite):
         self.y = y
         self.rect.x = x * TILESIZE
         self.rect.y = y * TILESIZE
+
+class Obstacle(pg.sprite.Sprite):
+   def __init__(self, game, x, y,w,h):
+        self.groups = game.walls
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        self.rect = pg.Rect(x,y,w,h)
+        self.x = x
+        self.y = y
+        self.rect.x = x
+        self.rect.y = y
+
 
 
 class Zed(pg.sprite.Sprite):
@@ -97,15 +109,16 @@ class Zed(pg.sprite.Sprite):
         self.rect = self.image.get_rect()
         self.hit_rect = ZED_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
-        self.pos = vec(x, y) * TILESIZE
+        self.pos = vec(x, y)
         self.vel = vec(0, 0)
         self.acc = vec(0, 0)
         self.rect.center = self.pos
         self.rot = 0
         self.health = ZED_HEALTH
+        self.speed = choice(ZED_SPEEDS)
 
 
-    def avoid_zeds(self):      #gives final direction
+    def avoid_zeds(self):      #gives final direction and stops clumping together of zeds
         for zed in self.game.zeds:
             if zed !=self:
                 dist = self.pos - zed.pos
@@ -119,7 +132,7 @@ class Zed(pg.sprite.Sprite):
         self.rect.center = self.pos
         self.acc = vec(1, 0).rotate(-self.rot)
         self.avoid_zeds()                              #need to fix this so that zeds do ot clump up together
-        self.acc.scale_to_length(ZED_SPEED)
+        self.acc.scale_to_length(self.speed)
         self.acc += self.vel * -1  #friction
         self.vel += self.acc * self.game.dt
         self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
@@ -164,3 +177,5 @@ class Bullet(pg.sprite.Sprite):
             self.kill()
         if pg.time.get_ticks() - self.spawn_time > BULLET_LIFETIME:
             self.kill()
+
+
