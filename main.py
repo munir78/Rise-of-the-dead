@@ -40,7 +40,7 @@ class Game:
         self.map_rect = self.map_img.get_rect()
         self.player_img = pg.image.load(path.join(img_folder, PLAYER_IMG)).convert_alpha()
         self.bullet_img = pg.image.load(path.join(img_folder, BULLET_IMG)).convert_alpha()
-        self.mob_img = pg.image.load(path.join(img_folder, ZED_IMG)).convert_alpha()
+        self.zed_img = pg.image.load(path.join(img_folder, ZED_IMG)).convert_alpha()
         self.wall_img = pg.image.load(path.join(img_folder, WALL_IMG)).convert_alpha()
         self.wall_img = pg.transform.scale(self.wall_img, (TILESIZE, TILESIZE))
 
@@ -48,7 +48,7 @@ class Game:
         # initialize all variables and do all the setup for a new game
         self.all_sprites = pg.sprite.Group()
         self.walls = pg.sprite.Group()
-        self.mobs = pg.sprite.Group()
+        self.zeds = pg.sprite.Group()
         self.bullets = pg.sprite.Group()
         # for row, tiles in enumerate(self.map.data):              now using tmx file to create map
         #     for col, tile in enumerate(tiles):
@@ -61,8 +61,11 @@ class Game:
         for tile_object in self.map.tmxdata.objects:
             if tile_object.name == 'player':
                 self.player = Player(self,tile_object.x,tile_object.y)
+            if tile_object.name == 'Zombie':
+                Zed(self, tile_object.x, tile_object.y)
             if tile_object.name =='Walls':
                 Obstacle(self,tile_object.x,tile_object.y,tile_object.width,tile_object.height)
+
 
         self.camera = Camera(self.map.width, self.map.height)
 
@@ -83,8 +86,8 @@ class Game:
         # update section of the game loop
         self.all_sprites.update()
         self.camera.update(self.player)
-        # mobs hit player
-        hits = pg.sprite.spritecollide(self.player, self.mobs, False, collide_hit_rect)
+        # zedss hit player
+        hits = pg.sprite.spritecollide(self.player, self.zeds, False, collide_hit_rect)
         for hit in hits:
             self.player.health -= ZED_DAMAGE
             hit.vel = vec(0, 0)
@@ -93,7 +96,7 @@ class Game:
         if hits:
             self.player.pos += vec(ZED_KNOCKBACK, 0).rotate(-hits[0].rot)
         # bullets hit zeds
-        hits = pg.sprite.groupcollide(self.mobs, self.bullets, False, True)
+        hits = pg.sprite.groupcollide(self.zeds, self.bullets, False, True)
         for hit in hits:
             hit.health -= BULLET_DAMAGE
             hit.vel = vec(0, 0)
