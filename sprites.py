@@ -2,7 +2,7 @@
 import pygame as pg
 from settings import *
 from tilemap import collide_hit_rect
-from random import uniform, choice
+from random import uniform, choice, randint
 vec = pg.math.Vector2              #as velocity is a vector
 
 
@@ -28,11 +28,13 @@ def collide_with_walls(sprite,group, dir): #applies to all sprites
 
 class Player(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = PLAYER_LAYER
         self.groups = game.all_sprites
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = game.player_img
         self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         self.hit_rect = PLAYER_HIT_RECT
         self.hit_rect.center = self.rect.center
         self.vel = vec(0, 0)
@@ -61,6 +63,7 @@ class Player(pg.sprite.Sprite):
                 pos = self.pos + BARREL_OFFSET.rotate(-self.rot)
                 Bullet(self.game, pos, dir)
                 self.vel = vec(-KICKBACK, 0).rotate(-self.rot)
+                MuzzleFlash(self.game, pos)
 
     def update(self):                                                           #velocity rotated to point in the direction we are facing
         self.get_keys()
@@ -77,6 +80,7 @@ class Player(pg.sprite.Sprite):
 
 class Wall(pg.sprite.Sprite):
    def __init__(self, game, x, y):
+        self._layer = WALL_LAYER
         self.groups = game.all_sprites, game.walls
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -98,15 +102,15 @@ class Obstacle(pg.sprite.Sprite):
         self.rect.x = x
         self.rect.y = y
 
-
-
 class Zed(pg.sprite.Sprite):
     def __init__(self, game, x, y):
+        self._layer = ZED_LAYER
         self.groups = game.all_sprites, game.zeds
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
         self.image = game.zed_img
         self.rect = self.image.get_rect()
+        self.rect.center = (x, y)
         self.hit_rect = ZED_HIT_RECT.copy()
         self.hit_rect.center = self.rect.center
         self.pos = vec(x, y)
@@ -115,6 +119,7 @@ class Zed(pg.sprite.Sprite):
         self.rect.center = self.pos
         self.rot = 0
         self.health = ZED_HEALTH
+        self.speed = choice(ZED_SPEEDS)
 
     def avoid_zeds(self):
         for zed in self.game.zeds:
@@ -130,7 +135,7 @@ class Zed(pg.sprite.Sprite):
         self.rect.center = self.pos
         self.acc = vec(1, 0).rotate(-self.rot)
         self.avoid_zeds()
-        self.acc.scale_to_length( ZED_SPEEDS  )
+        self.acc.scale_to_length( self.speed )
         self.acc += self.vel * -1
         self.vel += self.acc * self.game.dt
         self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
@@ -154,9 +159,9 @@ class Zed(pg.sprite.Sprite):
         if self.health <ZED_HEALTH:
             pg.draw.rect(self.image,col,self.health_bar)
 
-
 class Bullet(pg.sprite.Sprite):
     def __init__(self, game, pos, dir):
+        self._layer = BULLET_LAYER
         self.groups = game.all_sprites, game.bullets
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
@@ -177,3 +182,19 @@ class Bullet(pg.sprite.Sprite):
             self.kill()
 
 
+class MuzzleFlash(pg.sprite.Sprite):
+    def __init__(self, game, pos):
+        self._layer = EFFECTS_LAYER
+        self.groups = game.all_sprites
+        pg.sprite.Sprite.__init__(self, self.groups)
+        self.game = game
+        size = randint(20, 50)
+        self.image = pg.transform.scale(choice(game.gun_flashes), (size, size))
+        self.rect = self.image.get_rect()
+        self.pos = pos
+        self.rect.center = pos
+        self.spawn_time = pg.time.get_ticks()
+
+    def update(self):
+        if pg.time.get_ticks() - self.spawn_time > FLASH_DURATION:
+            self.kill()

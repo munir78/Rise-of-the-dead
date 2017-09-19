@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="64" tileheight="64" nextobjectid="150">
+<map version="1.0" tiledversion="1.0.3" orientation="orthogonal" renderorder="right-down" width="50" height="30" tilewidth="64" tileheight="64" nextobjectid="166">
  <tileset firstgid="1" source="kenny.tsx"/>
  <layer name="ground" width="50" height="30">
   <data encoding="csv">
@@ -176,11 +176,7 @@
   <object id="56" name="Walls" x="768" y="256" width="64" height="58"/>
   <object id="61" name="Walls" x="700.012" y="325.128" width="64" height="58" rotation="-8.62735"/>
   <object id="62" name="Walls" x="704" y="384" width="64" height="58"/>
-  <object id="63" name="Walls" x="464" y="16" width="224" height="32"/>
   <object id="64" name="Walls" x="528" y="80" width="96" height="32"/>
-  <object id="65" name="Walls" x="1296" y="16" width="288" height="32"/>
-  <object id="66" name="Walls" x="1296" y="80" width="288" height="32"/>
-  <object id="67" name="Walls" x="1632" y="32" width="64" height="64"/>
   <object id="68" name="Walls" x="2336" y="96" width="64" height="64"/>
   <object id="69" name="Walls" x="2656" y="96" width="64" height="64"/>
   <object id="70" name="Walls" x="2976" y="288" width="64" height="64"/>
@@ -190,25 +186,22 @@
   <object id="75" name="Walls" x="416" y="1568" width="64" height="64"/>
   <object id="76" name="Walls" x="544" y="1696" width="64" height="64"/>
   <object id="77" name="Walls" x="672" y="1568" width="64" height="64"/>
-  <object id="78" name="Walls" x="0" y="1472" width="192" height="64"/>
-  <object id="79" name="Walls" x="0" y="1088" width="192" height="64"/>
-  <object id="80" name="Walls" x="0" y="576" width="192" height="64"/>
-  <object id="81" name="Walls" x="2432" y="0" width="448" height="64"/>
-  <object id="82" name="Walls" x="2432" y="64" width="192" height="64"/>
+  <object id="78" name="Walls" x="32" y="1472" width="160" height="64"/>
+  <object id="79" name="Walls" x="32" y="1088" width="160" height="64"/>
+  <object id="80" name="Walls" x="32" y="576" width="144" height="64"/>
+  <object id="82" name="Walls" x="2432" y="32" width="192" height="96"/>
   <object id="83" name="Walls" x="2432" y="128" width="192" height="64"/>
   <object id="84" name="Walls" x="2752" y="64" width="320" height="64"/>
   <object id="85" name="Walls" x="2752" y="128" width="320" height="64"/>
-  <object id="86" name="Walls" x="2624" y="192" width="512" height="64"/>
+  <object id="86" name="Walls" x="2624" y="192" width="448" height="64"/>
   <object id="87" name="Walls" x="2816" y="256" width="128" height="64"/>
   <object id="88" name="Walls" x="2816" y="320" width="128" height="64"/>
-  <object id="89" name="Walls" x="2880" y="384" width="256" height="64"/>
-  <object id="90" name="Walls" x="3072" y="256" width="64" height="128"/>
+  <object id="89" name="Walls" x="2880" y="384" width="192" height="64"/>
   <object id="91" name="Walls" x="2880" y="448" width="192" height="64"/>
   <object id="92" name="Walls" x="2320" y="1232" width="32" height="32"/>
   <object id="93" name="Walls" x="2448" y="1168" width="32" height="32"/>
   <object id="94" name="Walls" x="2576" y="1168" width="32" height="32"/>
   <object id="95" name="Walls" x="2384" y="1296" width="32" height="32"/>
-  <object id="97" name="Walls" x="3152" y="1872" width="32" height="32"/>
   <object id="101" name="Walls" x="784" y="336" width="32" height="32"/>
   <object id="102" name="Walls" x="2560" y="384" width="128" height="64"/>
   <object id="103" name="Walls" x="2624" y="448" width="64" height="64"/>
@@ -231,7 +224,7 @@
   <object id="122" name="Walls" x="1920" y="512" width="192" height="128"/>
   <object id="123" name="Walls" x="2048" y="640" width="64" height="128"/>
   <object id="124" name="Zombie" x="1856" y="208" width="64" height="64"/>
-  <object id="125" name="Zombie" x="1136" y="64" width="64" height="64"/>
+  <object id="125" name="Zombie" x="1296" y="160" width="64" height="64"/>
   <object id="126" name="Zombie" x="1680" y="224" width="64" height="64"/>
   <object id="127" name="Zombie" x="1648" y="704" width="64" height="64"/>
   <object id="128" name="Zombie" x="2000" y="816" width="64" height="64"/>
@@ -256,5 +249,18 @@
   <object id="147" name="Zombie" x="2944" y="1216" width="64" height="64"/>
   <object id="148" name="Zombie" x="2864" y="1680" width="64" height="64"/>
   <object id="149" name="Zombie" x="2720" y="960" width="64" height="64"/>
+  <object id="150" name="Walls" x="0" y="0" width="3152" height="16"/>
+  <object id="152" name="Walls" x="0" y="1904" width="3136" height="16"/>
+  <object id="154" name="Walls" x="0" y="64" width="16" height="512"/>
+  <object id="155" name="Walls" x="0" y="640" width="16" height="480"/>
+  <object id="156" name="Walls" x="0" y="1152" width="16" height="336"/>
+  <object id="157" name="Walls" x="0" y="1520" width="16" height="368"/>
+  <object id="158" name="Walls" x="3184" y="32" width="16" height="528"/>
+  <object id="159" name="Walls" x="3184" y="576" width="16" height="464"/>
+  <object id="160" name="Walls" x="3184" y="1056" width="16" height="784"/>
+  <object id="161" name="Walls" x="3152" y="1856" width="48" height="48"/>
+  <object id="162" name="Walls" x="1280" y="32" width="304" height="80"/>
+  <object id="164" name="Walls" x="1632" y="32" width="64" height="64"/>
+  <object id="165" name="Walls" x="448" y="32" width="240" height="32"/>
  </objectgroup>
 </map>
