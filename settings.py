@@ -25,8 +25,8 @@ WALL_IMG = 'gbrick.jpg'
 
 # Player settings
 
-PLAYER_SPEED = 250
-PLAYER_ROT_SPEED = 250
+PLAYER_SPEED = 300
+PLAYER_ROT_SPEED = 300
 PLAYER_IMG = 'smgh.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35) #size of rectangle for player
 BARREL_OFFSET = vec(30, 10)  #where bullets spawn from, so it looks like it is travelling from the gun
@@ -35,7 +35,7 @@ PLAYER_HEALTH = 100
 BULLET_IMG = 'Bullet2.png'
 BULLET_SPEED = 500
 BULLET_LIFETIME = 1000
-BULLET_RATE = 250
+BULLET_RATE = 100
 KICKBACK = 30
 GUN_SPREAD = 5
 BULLET_DAMAGE = 25
@@ -58,3 +58,7 @@ PLAYER_LAYER = 2
 BULLET_LAYER = 3
 ZED_LAYER = 2
 EFFECTS_LAYER = 4
+ITEMS_LAYER = 1
+
+ITEM_IMAGES = {'health': 'health_pack.png'}
+HEALTH_PACK_AMOUNT = 20
