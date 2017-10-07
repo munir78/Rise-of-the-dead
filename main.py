@@ -61,7 +61,7 @@ class Game:
         # for row, tiles in enumerate(self.map.data):              now using tmx file to create map
         #     for col, tile in enumerate(tiles):
         #         if tile == '1':
-        #             Wall(self, col, row)
+        #             Wall(self, col, row)www
         #         if tile == 'Z':
         #             Zed(self, col, row)
         #         if tile == 'P':

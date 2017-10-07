@@ -26,7 +26,7 @@ WALL_IMG = 'gbrick.jpg'
 # Player settings
 
 PLAYER_SPEED = 300
-PLAYER_ROT_SPEED = 300
+PLAYER_ROT_SPEED = 350
 PLAYER_IMG = 'smgh.png'
 PLAYER_HIT_RECT = pg.Rect(0, 0, 35, 35) #size of rectangle for player
 BARREL_OFFSET = vec(30, 10)  #where bullets spawn from, so it looks like it is travelling from the gun
@@ -40,13 +40,14 @@ KICKBACK = 30
 GUN_SPREAD = 5
 BULLET_DAMAGE = 25
 # ZED SETTINGS
-ZED_IMG = 'Zed.png'
+ZED_IMG = 'ZED.png'
 ZED_SPEEDS = [150,200,250,100,75]               #must add friction             #different speeds can be selected by the computer. randomized
 ZED_HIT_RECT = pg.Rect(0,0,30,30)
 ZED_HEALTH = 100
 ZED_DAMAGE =  10
 ZED_KNOCKBACK = 20
 AVOID_RADIUS = 50
+ZED_RADIUS = 400
 
 ############
 MUZZLE_FLASHES = ['whitePuff15.png', 'whitePuff16.png', 'whitePuff17.png',
@@ -61,4 +62,4 @@ EFFECTS_LAYER = 4
 ITEMS_LAYER = 1
 
 ITEM_IMAGES = {'health': 'health_pack.png'}
-HEALTH_PACK_AMOUNT = 20
+HEALTH_PACK_AMOUNT = 50

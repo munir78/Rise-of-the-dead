@@ -115,7 +115,7 @@ class Zed(pg.sprite.Sprite):
         self.groups = game.all_sprites, game.zeds
         pg.sprite.Sprite.__init__(self, self.groups)
         self.game = game
-        self.image = game.zed_img
+        self.image = game.zed_img.copy()
         self.rect = self.image.get_rect()
         self.rect.center = (x, y)
         self.hit_rect = ZED_HIT_RECT.copy()
@@ -127,6 +127,7 @@ class Zed(pg.sprite.Sprite):
         self.rot = 0
         self.health = ZED_HEALTH
         self.speed = choice(ZED_SPEEDS)
+        self.target = game.player
 
     def avoid_zeds(self):
         for zed in self.game.zeds:
@@ -136,21 +137,23 @@ class Zed(pg.sprite.Sprite):
                     self.acc += dist.normalize()
 
     def update(self):     #to find the angle which the ZED must have to face the player, use direction vector. player.pos -zed.pos to get the vector connecting the two locations, then find the angle of that vector (to the x axis)
-        self.rot = (self.game.player.pos - self.pos).angle_to(vec(1, 0))
-        self.image = pg.transform.rotate(self.game.zed_img, self.rot)
-        # self.rect = self.image.get_rect()
-        self.rect.center = self.pos
-        self.acc = vec(1, 0).rotate(-self.rot)
-        self.avoid_zeds()
-        self.acc.scale_to_length( self.speed )
-        self.acc += self.vel * -1
-        self.vel += self.acc * self.game.dt
-        self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
-        self.hit_rect.centerx = self.pos.x
-        collide_with_walls(self, self.game.walls, 'x')
-        self.hit_rect.centery = self.pos.y
-        collide_with_walls(self, self.game.walls, 'y')
-        self.rect.center = self.hit_rect.center
+        target_dist = self.target.pos - self.pos
+        if target_dist.length_squared() < ZED_RADIUS ** 2:
+            self.rot = target_dist.angle_to(vec(1, 0))
+            self.image = pg.transform.rotate(self.game.zed_img, self.rot)
+            # self.rect = self.image.get_rect()
+            self.rect.center = self.pos
+            self.acc = vec(1, 0).rotate(-self.rot)
+            self.avoid_zeds()
+            self.acc.scale_to_length( self.speed )
+            self.acc += self.vel * -1
+            self.vel += self.acc * self.game.dt
+            self.pos += self.vel * self.game.dt + 0.5 * self.acc * self.game.dt ** 2
+            self.hit_rect.centerx = self.pos.x
+            collide_with_walls(self, self.game.walls, 'x')
+            self.hit_rect.centery = self.pos.y
+            collide_with_walls(self, self.game.walls, 'y')
+            self.rect.center = self.hit_rect.center
         if self.health <= 0:
             self.kill()
 
